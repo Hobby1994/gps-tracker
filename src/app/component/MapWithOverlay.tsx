@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react";
 import { Map, Marker, Overlay } from "pigeon-maps";
 import axios from "axios";
+import Image from "next/image";
 
 interface Location {
   lat: number;
@@ -55,14 +56,14 @@ const MapWithOverlay: React.FC = () => {
       {error ? (
         <p>Error: {error}</p>
       ) : (
-        <Map
-          center={[location.lat, location.lng]}
-          zoom={14}
-          width={window.innerWidth}
-          height={window.innerHeight}
-        >
+        <Map center={[location.lat, location.lng]} zoom={17}>
           <Overlay anchor={[location.lat, location.lng]} offset={[25, 25]}>
-            <img src="/logo.png" alt="Location Image" width={25} height={25} />
+            <Image
+              src="/logo.png"
+              alt="Location Image"
+              width={25}
+              height={25}
+            />
           </Overlay>
         </Map>
       )}
