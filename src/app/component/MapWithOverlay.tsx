@@ -8,13 +8,18 @@ import Image from "next/image";
 interface Location {
   lat: number;
   lng: number;
+  timestamp: number;
 }
 
 const DEVICE_ID = process.env.NEXT_PUBLIC_DEVICE_ID!;
 const FLESPPI_TOKEN = process.env.NEXT_PUBLIC_FLESPPI_TOKEN!;
 
 const MapWithOverlay: React.FC = () => {
-  const [location, setLocation] = useState<Location>({ lat: 0, lng: 0 });
+  const [location, setLocation] = useState<Location>({
+    lat: 0,
+    lng: 0,
+    timestamp: 0,
+  });
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
@@ -34,10 +39,11 @@ const MapWithOverlay: React.FC = () => {
           console.log("Received message:", message);
 
           // Ensure `position` exists and contains `latitude` and `longitude`
-
+          const timestamp = message.timestamp; // timestamp-ийг авах
           setLocation({
             lat: message["position.latitude"],
             lng: message["position.longitude"],
+            timestamp,
           });
         } else {
           throw new Error("No position data available");
@@ -59,11 +65,17 @@ const MapWithOverlay: React.FC = () => {
         <Map center={[location.lat, location.lng]} zoom={17}>
           <Overlay anchor={[location.lat, location.lng]} offset={[25, 25]}>
             <Image
-              src="/logo.png"
+              src="/busGPSIcon.png"
               alt="Location Image"
-              width={25}
-              height={25}
+              width={50}
+              height={50}
             />
+            <div className="bg-yellow-700 rounded-xl font-light px-2">
+              <p className="">45-82 УХУ</p>
+              <p className=" ">
+                {new Date(location.timestamp * 1000).toLocaleString()}
+              </p>
+            </div>
           </Overlay>
         </Map>
       )}
