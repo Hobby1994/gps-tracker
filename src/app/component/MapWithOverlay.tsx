@@ -9,6 +9,7 @@ interface Location {
   lat: number;
   lng: number;
   timestamp: number;
+  speed: number;
 }
 
 const DEVICE_ID = process.env.NEXT_PUBLIC_DEVICE_ID!;
@@ -19,6 +20,7 @@ const MapWithOverlay: React.FC = () => {
     lat: 0,
     lng: 0,
     timestamp: 0,
+    speed: 0,
   });
   const [error, setError] = useState<string | null>(null);
 
@@ -40,10 +42,12 @@ const MapWithOverlay: React.FC = () => {
 
           // Ensure `position` exists and contains `latitude` and `longitude`
           const timestamp = message.timestamp; // timestamp-ийг авах
+          const speed = message["position.speed"];
           setLocation({
             lat: message["position.latitude"],
             lng: message["position.longitude"],
             timestamp,
+            speed,
           });
         } else {
           throw new Error("No position data available");
@@ -70,8 +74,8 @@ const MapWithOverlay: React.FC = () => {
               width={50}
               height={50}
             />
-            <div className="bg-yellow-700 rounded-xl font-light px-2">
-              <p className="">45-82 УХУ</p>
+            <div className="bg-customYellow text-gray-800 rounded-xl font-light px-2">
+              <p className="">45-82 УХУ {location.speed} km/h</p>
               <p className=" ">
                 {new Date(location.timestamp * 1000).toLocaleString()}
               </p>
